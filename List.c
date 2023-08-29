@@ -114,6 +114,7 @@ void* List_remove(List_t *pList, unsigned index){
     else if (pTarget->pNextElem == NULL){
         //call the pop function
         List_pop(pList);
+
         return 1;
     }
 
@@ -165,6 +166,21 @@ void* List_pop(List_t *pList){
 
         free(pOldLast);
     }
+}
+
+int List_getSize(List_t *pList){
+    int i = 0;
+    List_t *pListCrawler = pList;
+
+    //make sure the crawler points to an existing list element
+    while(pListCrawler != NULL){
+
+        pListCrawler = pListCrawler->pNextElem;
+        i++;
+    }
+
+    //substract one as list element zero does not hold any data
+    return i-1;
 }
 
 //return pointer to item contained at a certain index in the list
