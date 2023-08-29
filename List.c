@@ -183,8 +183,38 @@ int List_getSize(List_t *pList){
     return i-1;
 }
 
+//sorts the list using the bubble sort algoritm
 int List_sort(List_t *pList){
-    
+    int i, j, switched, size;
+    size = List_getSize(pList);
+
+    if (size < 2){
+        //list is already sorted (one element only)
+        return 0;
+    }
+
+    for (i = 0; i < size -1; i++) {
+
+        switched = 0;
+        List_t *pListCrawler = pList->pNextElem;
+
+        for (j = 0; j < size - i - 1 ; j++) {
+
+            List_t *pListNextCrawler = pListCrawler->pNextElem;
+            if (*(int*)(pListCrawler->pItem) > *(int*)(pListNextCrawler->pItem)){
+                List_switch(pList, pListCrawler);
+                switched = 1;
+            }
+
+            pListCrawler = pListNextCrawler;
+        }
+
+        if (switched == 0){
+            break;
+        }
+        
+    }
+
 }
 
 //return pointer to item contained at a certain index in the list
@@ -216,17 +246,29 @@ int List_display(List_t *pList){
     }
 }
 
-//swtiches elements at index and index + 1
-int List_switch(List_t *pIndex){
+//swtiches list elements at index and index + 1
+int List_switch(List_t *pList, List_t *pIndex){
     List_t *pPrevIndex = pIndex->pPrevElem;
     List_t *pNextIndex = pIndex->pNextElem;
     List_t *pNextNextIndex = pNextIndex->pNextElem;
 
-    //updating pointers in neighbors
+    //updating pointers in neighbors list elements
     pPrevIndex->pNextElem = pNextIndex;
-    pNextNextIndex->pPrevElem = pIndex;
 
-    //
+    //if the next next index is still a valid list element
+    if (pNextNextIndex != NULL){
+        //update the next next pointers
+        pNextNextIndex->pPrevElem = pIndex;
+    }
+    else{
+        //update the pointers of the list element zero  (last element from the list will change !)
+        pList->pPrevElem = pIndex;
+    }
     
+    //updating pointers in index and next index list elements
+    pNextIndex->pPrevElem = pPrevIndex;
+    pNextIndex->pNextElem = pIndex;
+    pIndex->pPrevElem = pNextIndex;
+    pIndex->pNextElem = pNextNextIndex;
     
 }

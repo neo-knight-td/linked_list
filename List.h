@@ -29,6 +29,6 @@ int List_sort(List_t *pList);
 List_t *Element_create(void* pParamPrevElem,void* pParamNextElem, void* pParamItem);
 List_t *List_crawl(List_t *pList, unsigned index);
 int List_display(List_t *pList);
-int List_switch(List_t *pList, unsigned index);
+int List_switch(List_t *pList, List_t *pIndex);
 
 #endif
