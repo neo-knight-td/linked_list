@@ -19,6 +19,7 @@ int List_destroy(List_t *pList);
 int List_insert(List_t *pList, void *item, unsigned index);
 void* List_remove(List_t *pList, unsigned index);
 int List_push(List_t *pList, void *item);
+void* List_pop(List_t *pList);
 
 void* List_get(List_t *pList, unsigned index);
 

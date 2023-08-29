@@ -112,7 +112,8 @@ void* List_remove(List_t *pList, unsigned index){
 
     //if we are at the end of the list
     else if (pTarget->pNextElem == NULL){
-        //TODO :call the pop function
+        //call the pop function
+        List_pop(pList);
         return 1;
     }
 
@@ -143,6 +144,27 @@ int List_push(List_t *pList, void *item){
     pList->pPrevElem = pNewLast;
 
     return 1;
+}
+
+void* List_pop(List_t *pList){
+    //retreive pointer to old last list element
+    List_t *pOldLast = pList->pPrevElem;
+
+    //check that we do not pop the list element zero
+    if (pOldLast == pList){
+        return NULL;
+    }
+
+    else {
+        //retreive currently penultimate list element (that will become the last list element)
+        List_t *pNewLast = pOldLast->pPrevElem;
+        //udpate pointers in new last list element
+        pNewLast->pNextElem = NULL;
+        //update pointers in first list element
+        pList->pPrevElem = pNewLast;
+
+        free(pOldLast);
+    }
 }
 
 //return pointer to item contained at a certain index in the list
