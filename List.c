@@ -183,6 +183,10 @@ int List_getSize(List_t *pList){
     return i-1;
 }
 
+int List_sort(List_t *pList){
+    
+}
+
 //return pointer to item contained at a certain index in the list
 void* List_get(List_t *pList, unsigned index){
 
@@ -210,4 +214,19 @@ int List_display(List_t *pList){
     if (pList->pNextElem != NULL){
         List_display(pList->pNextElem);
     }
+}
+
+//swtiches elements at index and index + 1
+int List_switch(List_t *pIndex){
+    List_t *pPrevIndex = pIndex->pPrevElem;
+    List_t *pNextIndex = pIndex->pNextElem;
+    List_t *pNextNextIndex = pNextIndex->pNextElem;
+
+    //updating pointers in neighbors
+    pPrevIndex->pNextElem = pNextIndex;
+    pNextNextIndex->pPrevElem = pIndex;
+
+    //
+    
+    
 }
