@@ -2,61 +2,26 @@
 #include <stdlib.h>
 #include "List.h"
 
-List_t *Element_create(void* pParamPrevElem,void* pParamNextElem, void* pParamItem){
-
-    //allocate memory for the new list element
-    List_t *pList = (List_t*) malloc(sizeof(List_t));
-
-    //set the previous element of the new list element
-    if (pParamPrevElem == NULL){
-        pList->pPrevElem = pList;
-    }
-    else {
-        pList->pPrevElem = pParamPrevElem;
-    }
-
-    //set the next element of the new list element
-    pList->pNextElem = pParamNextElem;
-    //set the item to the new list element
-    pList->pItem = pParamItem;
-
-    return pList;
-}
-
+//create a new List instance
 List_t *List_create(void){
 
-    return Element_create(NULL, NULL, NULL);
+    //create a list element zero (indicate it with first paramter NULL)
+    return List_create_element(NULL, NULL, NULL);
 }
 
+//destroy a List instance
 int List_destroy(List_t *pList){
 
+    //recursively destroy the list elements (after checking validity of next element)
     if (pList->pNextElem != NULL){
         List_destroy(pList->pNextElem);
     }
 
+    //free memory associated to the present list element
     free(pList);
 }
 
-//returns a pointer to the list element at a certain index 
-List_t *List_crawl(List_t *pList, unsigned index){
-    int i = 0;
-    List_t *pListCrawler = pList;
-
-    //make sure the crawler points to an existing list element
-    while(pListCrawler != NULL){
-        //if we reached the desired index, return current crawler pointer
-        if (i == index){
-            return pListCrawler;
-        }
-
-        pListCrawler = pListCrawler->pNextElem;
-        i++;
-    }
-
-    //if we could not reach the desired index, return null pointer
-    return NULL;
-}
-
+//insert a new item at ’index’ in the list
 int List_insert(List_t *pList, void *item, unsigned index){
     //crawl in the list until you find desired list element
     List_t *pTarget = List_crawl(pList,index);
@@ -77,7 +42,7 @@ int List_insert(List_t *pList, void *item, unsigned index){
 
     else{
         //create new list element
-        List_t *pInsert = Element_create(pTarget->pPrevElem, pTarget, item);
+        List_t *pInsert = List_create_element(pTarget->pPrevElem, pTarget, item);
 
         //get pointer to list element before target list element
         List_t *pPrevTarget = pTarget->pPrevElem;
@@ -92,6 +57,7 @@ int List_insert(List_t *pList, void *item, unsigned index){
 
 }
 
+//remove the item at ’index’ from the list
 void* List_remove(List_t *pList, unsigned index){
     //crawl in the list until you find desired list element
     List_t *pTarget = List_crawl(pList,index);
@@ -106,7 +72,7 @@ void* List_remove(List_t *pList, unsigned index){
     //if there is only one element in the list (implicitly meaning that we searched for index 0)
     else if (pList->pPrevElem == pList){
         
-        //no list element can be added at index 0
+        //list element zero cannot be removed
         return 0;
     }
 
@@ -115,7 +81,8 @@ void* List_remove(List_t *pList, unsigned index){
         //call the pop function
         List_pop(pList);
 
-        return 1;
+        //returning zero because function type is not an int
+        return 0;
     }
 
     else {
@@ -134,11 +101,28 @@ void* List_remove(List_t *pList, unsigned index){
     }
 }
 
+//return pointer to item contained at a certain index in the list
+void* List_get(List_t *pList, unsigned index){
+
+    //crawl in the list until you find desired list element
+    List_t *pTarget = List_crawl(pList,index);
+
+    //if list element is not null (crawl succeeded)
+    if (pTarget != NULL){
+        //return pointer to list element item
+        return pTarget->pItem;
+    }
+    else{
+        return NULL;
+    }
+}
+
+//push (add) an item at the end of the list
 int List_push(List_t *pList, void *item){
     //retreive pointer to old last list element
     List_t *pOldLast = pList->pPrevElem;
     //create new last list element
-    List_t *pNewLast = Element_create(pOldLast, NULL, item);
+    List_t *pNewLast = List_create_element(pOldLast, NULL, item);
     //update pointer in old last list element
     pOldLast->pNextElem = pNewLast;
     //update pointer in first list element
@@ -147,6 +131,7 @@ int List_push(List_t *pList, void *item){
     return 1;
 }
 
+//pop (remove) the item at the end of the list and return it
 void* List_pop(List_t *pList){
     //retreive pointer to old last list element
     List_t *pOldLast = pList->pPrevElem;
@@ -168,6 +153,7 @@ void* List_pop(List_t *pList){
     }
 }
 
+//eturn the number of item in the list
 int List_getSize(List_t *pList){
     int i = 0;
     List_t *pListCrawler = pList;
@@ -217,20 +203,46 @@ int List_sort(List_t *pList){
 
 }
 
-//return pointer to item contained at a certain index in the list
-void* List_get(List_t *pList, unsigned index){
+//create a single list element
+List_t *List_create_element(void* pParamPrevElem,void* pParamNextElem, void* pParamItem){
 
-    //crawl in the list until you find desired list element
-    List_t *pTarget = List_crawl(pList,index);
+    //allocate memory for the new list element
+    List_t *pList = (List_t*) malloc(sizeof(List_t));
 
-    //if list element is not null (crawl succeeded)
-    if (pTarget != NULL){
-        //return pointer to list element item
-        return pTarget->pItem;
+    //set the previous element of the new list element
+    if (pParamPrevElem == NULL){
+        pList->pPrevElem = pList;
     }
-    else{
-        return NULL;
+    else {
+        pList->pPrevElem = pParamPrevElem;
     }
+
+    //set the next element of the new list element
+    pList->pNextElem = pParamNextElem;
+    //set the item to the new list element
+    pList->pItem = pParamItem;
+
+    return pList;
+}
+
+//returns a pointer to the list element at a certain index 
+List_t *List_crawl(List_t *pList, unsigned index){
+    int i = 0;
+    List_t *pListCrawler = pList;
+
+    //make sure the crawler points to an existing list element
+    while(pListCrawler != NULL){
+        //if we reached the desired index, return current crawler pointer
+        if (i == index){
+            return pListCrawler;
+        }
+
+        pListCrawler = pListCrawler->pNextElem;
+        i++;
+    }
+
+    //if we could not reach the desired index, return null pointer
+    return NULL;
 }
 
 //displays list elements on the console (all list items are considered to be pointer integers)
@@ -246,8 +258,13 @@ int List_display(List_t *pList){
     }
 }
 
-//swtiches list elements at index and index + 1
+//swtiches list elements at index and index + 1.
 int List_switch(List_t *pList, List_t *pIndex){
+    
+    //do not switch if list element index is not valid or if list element zero 
+    if (pIndex == NULL || pIndex == pList){
+        return 0;
+    } 
     List_t *pPrevIndex = pIndex->pPrevElem;
     List_t *pNextIndex = pIndex->pNextElem;
     List_t *pNextNextIndex = pNextIndex->pNextElem;

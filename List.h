@@ -1,7 +1,8 @@
 #ifndef LIST_H
 #define LIST_H
 
-//we followed this approach for creating a struct that would act like a C++ class : https://stackoverflow.com/a/1403926
+//we followed this approach for organizing our code : https://stackoverflow.com/a/1403926
+
 struct List_t
 {
     //data members declaration
@@ -26,7 +27,7 @@ int List_sort(List_t *pList);
 
 
 //function members (prototypes) declaration (other)
-List_t *Element_create(void* pParamPrevElem,void* pParamNextElem, void* pParamItem);
+List_t *List_create_element(void* pParamPrevElem,void* pParamNextElem, void* pParamItem);
 List_t *List_crawl(List_t *pList, unsigned index);
 int List_display(List_t *pList);
 int List_switch(List_t *pList, List_t *pIndex);

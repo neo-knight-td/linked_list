@@ -78,6 +78,13 @@ int main()
 
     printf("Size of the list is %d\r\n\r\n", List_getSize(pList));
 
+    List_remove(pList, 1);
+    List_remove(pList, 1);
+    List_remove(pList, 1);
+    List_remove(pList, 1);
+
+    printf("Size of the list is %d\r\n\r\n", List_getSize(pList));
+
     List_destroy(pList);
 
     return 0;
