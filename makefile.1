@@ -1,0 +1,9 @@
+CC=gcc
+CFLAGS=-I.
+DEPS = List.h
+
+%.o: %.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+linked_list: linked_list.o List.o 
+	$(CC) -o linked_list linked_list.o List.o 
